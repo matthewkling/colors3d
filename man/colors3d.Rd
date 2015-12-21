@@ -4,8 +4,7 @@
 \alias{colors3d}
 \title{Get colors for a 3D dataset.}
 \usage{
-colors3d(data, trans = c("fit"), order = 1, inversion = 1,
-  opacity = NULL)
+colors3d(data, trans = "fit", order = 1, inversion = 1, opacity = NULL)
 }
 \arguments{
 \item{data}{Matrix or data frame with 3 numeric columns.}

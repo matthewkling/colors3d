@@ -16,11 +16,11 @@
 #'   @param opacity Not currently used.
 #' @return Vector of color values.
 
-colors3d <- function(data, trans=c("fit"), order=1, inversion=1, opacity=NULL){
+colors3d <- function(data, trans="fit", order=1, inversion=1, opacity=NULL){
       require(scales)
       require(combinat)
       data <- apply(data, 2, rescale)
-      if(scale=="ecdf") data <- apply(data, 2, function(x)ecdf(x)(x))
+      if(trans=="ecdf") data <- apply(data, 2, function(x)ecdf(x)(x))
       data <- data[,permn(1:3)[[order]]]
       invert <- (1:3)[as.logical(expand.grid(c(F,T), c(F,T), c(F,T))[inversion,])]
       data[,invert] <- 1- data[,invert]
