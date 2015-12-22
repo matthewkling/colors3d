@@ -2,7 +2,7 @@
 % Please edit documentation in R/colomap.R
 \name{colors2d}
 \alias{colors2d}
-\title{Get colors from a 4-color plane for a 2D dataset.}
+\title{Map values to a 2D legend interpolated from 4 corner colors.}
 \usage{
 colors2d(data, colors = c("yellow", "green", "blue", "magenta"))
 }

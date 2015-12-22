@@ -1,7 +1,7 @@
 
 
 
-#' Get colors from RGB space for a 3D dataset.
+#' Map values to a 3D legend in RGB colorspace.
 #'
 #' This function returns a color value for each row of the 3-column dataset
 #' supplied, by transforming the input data and using it as RGB values.
@@ -30,7 +30,7 @@ colors3d <- function(data, trans="fit", order=1, inversion=1, opacity=NULL){
 }
 
 
-#' Get colors from a 4-color plane for a 2D dataset.
+#' Map values to a 2D legend interpolated from 4 corner colors.
 #'
 #' This function returns a color value for each row of the 2-column dataset
 #' supplied, based on a 2D color palette interpolated from 4 corner colors.
