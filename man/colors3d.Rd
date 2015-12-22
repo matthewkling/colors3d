@@ -2,7 +2,7 @@
 % Please edit documentation in R/colomap.R
 \name{colors3d}
 \alias{colors3d}
-\title{Get colors for a 3D dataset.}
+\title{Get colors from RGB space for a 3D dataset.}
 \usage{
 colors3d(data, trans = "fit", order = 1, inversion = 1, opacity = NULL)
 }
