@@ -30,12 +30,14 @@ colors3d <- function(data, trans="fit", order=1, inversion=1, opacity=NULL){
 }
 
 
+
 #' Map values to a 2D legend interpolated from 4 corner colors.
 #'
 #' This function returns a color value for each row of the 2-column dataset
 #' supplied, based on a 2D color palette interpolated from 4 corner colors.
 #'
-#' @param data Matrix or data frame with 3 numeric columns.
+#' @param data Matrix or data frame with 2 numeric columns; they will map to x
+#'   and y.
 #' @param colors Vector of 4 corner colors to interpolate, clockwise from upper
 #'   right.
 #' @return Vector of color values.
@@ -53,3 +55,65 @@ colors2d <- function(data, colors=c("yellow", "green", "blue", "magenta")){
       rgb(t(apply(data, 1, interpolate)))
 }
 
+
+
+
+
+#' Internal function converting x-y do distance-angle.
+#'
+#' @param data Matrix or data frame with 2 numeric columns representing x and y.
+#' @param xyratio Single number indicating unit ratio in x vs y direction.
+#' @param xorigin, yorigin Numbers indicating center of polarization.
+#' @return 2-column matrix of distances and angles.
+
+polarize <- function(data, xyratio, xorigin=0, yorigin=0){
+      distance <- sqrt((data[,1]-xorigin)^2 + ((data[,2]-yorigin) * xyratio)^2)
+      angle <- acos((data[,1]-xorigin) / distance) * 180 / pi
+      angle[data[,2]<yorigin] <- 360 - angle[data[,2]<yorigin]
+      return(cbind(distance, angle))
+}
+
+
+#' Map values to a 2D legend interpolated from 4 corner colors.
+#'
+#' This function returns a color value for each row of the 2-column dataset
+#' supplied, based on a 2D color palette interpolated from 4 corner colors.
+#'
+#' @param data Matrix or data frame with 2 numeric columns; they will map to x
+#'   and y.
+#' @param colors Vector of 5 colors to interpolate: origin and then the
+#'   4 axis tips clockwise from top.
+#' @return Vector of color values.
+
+colorwheel2d <- function(data, colors=c("black", "yellow", "green", "blue", "magenta"),
+                         origin=NULL, xyratio=NULL){
+      if(is.null(origin)) origin <- c(sum(range(data[,1], na.rm=T))/2,
+                                      sum(range(data[,2], na.rm=T))/2)
+
+      xrange <- range(data[,1], na.rm=T)
+      yrange <- range(data[,2], na.rm=T)
+      xmag <- plyr::round_any(max(abs(xrange)), (xrange[2]-xrange[1])/20, ceiling)
+      ymag <- plyr::round_any(max(abs(yrange)), (yrange[2]-yrange[1])/20, ceiling)
+      if(is.null(xyratio)) xyratio <- xmag / ymag
+
+      pdata <- polarize(data, xyratio=xyratio, xorigin=origin[1], yorigin=origin[2])
+
+      colors <- col2rgb(colors)
+      pal <- colors[,c(3,2,5,4,3)] / 255
+      center <- colors[,1]
+      center <- as.vector(center)
+
+      angle <- pdata[,2] / 360
+      cl <- ceiling(angle * 4) + 1
+      fl <- floor(angle * 4) + 1
+      col <- matrix(NA, length(angle), 3)
+      mx <- max(pdata[,1])
+
+      for(i in 1:length(angle)){
+            interp <- angle[i] * 4 - fl[i] + 1
+            col_angle <- (as.vector(pal[,cl[i]]) * interp +
+                                as.vector(pal[,fl[i]]) * (1-interp))
+            col[i,] <- col_angle * pdata[,1][i] / mx + center * (1 - pdata[,1][i]/mx)
+      }
+      return(rgb(col))
+}
