@@ -115,5 +115,7 @@ colorwheel2d <- function(data, colors=c("black", "yellow", "green", "blue", "mag
                                 as.vector(pal[,fl[i]]) * (1-interp))
             col[i,] <- col_angle * pdata[,1][i] / mx + center * (1 - pdata[,1][i]/mx)
       }
-      return(rgb(col))
+      d <- rep(NA, nrow(data))
+      d[which(!is.na(rowMeans(col)))] <- rgb(na.omit(col))
+      return(d)
 }
