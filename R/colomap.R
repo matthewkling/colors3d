@@ -101,7 +101,7 @@ colorwheel2d <- function(data, colors=c("black", "yellow", "green", "blue", "mag
 
       colors <- col2rgb(colors)
       pal <- colors[,c(3,2,5,4,3)] / 255
-      center <- colors[,1]
+      center <- colors[,1] / 255
       center <- as.vector(center)
 
       angle <- pdata[,2] / 360
