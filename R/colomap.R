@@ -74,15 +74,16 @@ polarize <- function(data, xyratio, xorigin=0, yorigin=0){
 }
 
 
-#' Map values to a 2D legend interpolated from 4 corner colors.
+#' Map values to a 2D colorwheel legend.
 #'
 #' This function returns a color value for each row of the 2-column dataset
-#' supplied, based on a 2D color palette interpolated from 4 corner colors.
+#' supplied, based on a 2D color palette defined by a center color and a series
+#' of peripheral colors.
 #'
 #' @param data Matrix or data frame with 2 numeric columns; they will map to x
 #'   and y.
-#' @param colors Vector of 5 colors to interpolate: origin and then the
-#'   4 axis tips clockwise from top.
+#' @param colors Vector of 5 colors to interpolate: origin and then the 4 axis
+#'   tips clockwise from top.
 #' @return Vector of color values.
 
 colorwheel2d <- function(data, colors=c("black", "yellow", "green", "blue", "magenta"),

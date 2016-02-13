@@ -2,7 +2,7 @@
 % Please edit documentation in R/colomap.R
 \name{colorwheel2d}
 \alias{colorwheel2d}
-\title{Map values to a 2D legend interpolated from 4 corner colors.}
+\title{Map values to a 2D colorwheel legend.}
 \usage{
 colorwheel2d(data, colors = c("black", "yellow", "green", "blue", "magenta"),
   origin = NULL, xyratio = NULL)
@@ -11,14 +11,15 @@ colorwheel2d(data, colors = c("black", "yellow", "green", "blue", "magenta"),
 \item{data}{Matrix or data frame with 2 numeric columns; they will map to x
 and y.}
 
-\item{colors}{Vector of 5 colors to interpolate: origin and then the
-4 axis tips clockwise from top.}
+\item{colors}{Vector of 5 colors to interpolate: origin and then the 4 axis
+tips clockwise from top.}
 }
 \value{
 Vector of color values.
 }
 \description{
 This function returns a color value for each row of the 2-column dataset
-supplied, based on a 2D color palette interpolated from 4 corner colors.
+supplied, based on a 2D color palette defined by a center color and a series
+of peripheral colors.
 }
 
