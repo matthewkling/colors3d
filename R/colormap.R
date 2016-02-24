@@ -84,10 +84,18 @@ polarize <- function(data, xyratio, xorigin=0, yorigin=0){
 #'   and y.
 #' @param colors Vector of colors to interpolate: center followed by periphery
 #'   counterclockwise from 3 o'clock.
+#' @param origin Coorindates of color wheel center.
+#' @param xyratio Scalar representing how to map the elliptical color wheel in
+#'   the data space (the default 1 a circular mapping that weights the two
+#'   dimensions equally).
+#' @param kernel Optional function describing the shape of radial color
+#'   gradients (default is a linear mapping corresponding to a triangular
+#'   kernel); this function should take a vector of distances to the center as
+#'   its sole input and return a positive number.
 #' @return Vector of color values.
 
-colorwheel2d <- function(data, colors=c("black", "yellow", "green", "blue", "magenta"),
-                         origin=NULL, xyratio=NULL){
+colorwheel2d <- function(data, colors=c("black", "yellow", "green", "cyan", "blue", "magenta", "red"),
+                         origin=NULL, xyratio=NULL, kernel=NULL){
       if(is.null(origin)) origin <- c(sum(range(data[,1], na.rm=T))/2,
                                       sum(range(data[,2], na.rm=T))/2)
 
@@ -98,6 +106,7 @@ colorwheel2d <- function(data, colors=c("black", "yellow", "green", "blue", "mag
       if(is.null(xyratio)) xyratio <- xmag / ymag
 
       pdata <- polarize(data, xyratio=xyratio, xorigin=origin[1], yorigin=origin[2])
+      if(!is.null(kernel)) pdata[,1] <- kernel(pdata[,1])
       n <- length(colors)-1
       angle <- pdata[,2] / 360
       cl <- ceiling(angle * n) + 1
@@ -120,4 +129,3 @@ colorwheel2d <- function(data, colors=c("black", "yellow", "green", "blue", "mag
       d[which(!is.na(rowMeans(col)))] <- rgb(na.omit(col))
       return(d)
 }
-
