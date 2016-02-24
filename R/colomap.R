@@ -82,8 +82,8 @@ polarize <- function(data, xyratio, xorigin=0, yorigin=0){
 #'
 #' @param data Matrix or data frame with 2 numeric columns; they will map to x
 #'   and y.
-#' @param colors Vector of 5 colors to interpolate: origin and then the 4 axis
-#'   tips clockwise from top.
+#' @param colors Vector of colors to interpolate: center followed by periphery
+#'   counterclockwise from 3 o'clock.
 #' @return Vector of color values.
 
 colorwheel2d <- function(data, colors=c("black", "yellow", "green", "blue", "magenta"),
@@ -98,20 +98,20 @@ colorwheel2d <- function(data, colors=c("black", "yellow", "green", "blue", "mag
       if(is.null(xyratio)) xyratio <- xmag / ymag
 
       pdata <- polarize(data, xyratio=xyratio, xorigin=origin[1], yorigin=origin[2])
-
-      colors <- col2rgb(colors)
-      pal <- colors[,c(3,2,5,4,3)] / 255
-      center <- colors[,1] / 255
-      center <- as.vector(center)
-
+      n <- length(colors)-1
       angle <- pdata[,2] / 360
-      cl <- ceiling(angle * 4) + 1
-      fl <- floor(angle * 4) + 1
+      cl <- ceiling(angle * n) + 1
+      fl <- floor(angle * n) + 1
       col <- matrix(NA, length(angle), 3)
       mx <- max(pdata[,1])
 
+      colors <- col2rgb(colors)
+      pal <- colors[,c(2:ncol(colors),2)] / 255
+      center <- colors[,1] / 255
+      center <- as.vector(center)
+
       for(i in 1:length(angle)){
-            interp <- angle[i] * 4 - fl[i] + 1
+            interp <- angle[i] * n - fl[i] + 1
             col_angle <- (as.vector(pal[,cl[i]]) * interp +
                                 as.vector(pal[,fl[i]]) * (1-interp))
             col[i,] <- col_angle * pdata[,1][i] / mx + center * (1 - pdata[,1][i]/mx)
@@ -120,3 +120,4 @@ colorwheel2d <- function(data, colors=c("black", "yellow", "green", "blue", "mag
       d[which(!is.na(rowMeans(col)))] <- rgb(na.omit(col))
       return(d)
 }
+
