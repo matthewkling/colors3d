@@ -96,36 +96,44 @@ polarize <- function(data, xyratio, xorigin=0, yorigin=0){
 
 colorwheel2d <- function(data, colors=c("black", "yellow", "green", "cyan", "blue", "magenta", "red"),
                          origin=NULL, xyratio=NULL, kernel=NULL){
+      result <- rep(NA, nrow(data))
+      a <- which(!is.na(apply(data, 1, sum)))
+      data <- na.omit(data)
+
       if(is.null(origin)) origin <- c(sum(range(data[,1], na.rm=T))/2,
                                       sum(range(data[,2], na.rm=T))/2)
 
-      xrange <- range(data[,1], na.rm=T)
-      yrange <- range(data[,2], na.rm=T)
+      xrange <- range(data[,1])
+      yrange <- range(data[,2])
       xmag <- plyr::round_any(max(abs(xrange)), (xrange[2]-xrange[1])/20, ceiling)
       ymag <- plyr::round_any(max(abs(yrange)), (yrange[2]-yrange[1])/20, ceiling)
       if(is.null(xyratio)) xyratio <- xmag / ymag
 
-      pdata <- polarize(data, xyratio=xyratio, xorigin=origin[1], yorigin=origin[2])
-      if(!is.null(kernel)) pdata[,1] <- kernel(pdata[,1])
+      pdata <- as.data.frame(polarize(data, xyratio=xyratio,
+                                      xorigin=origin[1], yorigin=origin[2]))
+
+      if(!is.null(kernel)) pdata$distance <- kernel(pdata$distance)
+      pdata$angle <- pdata$angle / 360
+
       n <- length(colors)-1
-      angle <- pdata[,2] / 360
-      cl <- ceiling(angle * n) + 1
-      fl <- floor(angle * n) + 1
-      col <- matrix(NA, length(angle), 3)
-      mx <- max(pdata[,1])
+      pdata$cl <- ceiling(pdata$angle * n) + 1
+      pdata$fl <- floor(pdata$angle * n) + 1
+      col <- matrix(NA, length(pdata$angle), 3)
+      mx <- max(pdata$distance)
 
       colors <- col2rgb(colors)
       pal <- colors[,c(2:ncol(colors),2)] / 255
       center <- colors[,1] / 255
       center <- as.vector(center)
 
-      for(i in 1:length(angle)){
-            interp <- angle[i] * n - fl[i] + 1
-            col_angle <- (as.vector(pal[,cl[i]]) * interp +
-                                as.vector(pal[,fl[i]]) * (1-interp))
-            col[i,] <- col_angle * pdata[,1][i] / mx + center * (1 - pdata[,1][i]/mx)
+      getcol <- function(x){
+            interp <- x[2] * n - x[4] + 1
+            col_angle <- (as.vector(pal[,x[3]]) * interp +
+                                as.vector(pal[,x[4]]) * (1-interp))
+            col_angle * x[1] / mx + center * (1 - x[1]/mx)
       }
-      d <- rep(NA, nrow(data))
-      d[which(!is.na(rowMeans(col)))] <- rgb(na.omit(col))
-      return(d)
+
+      col <- t(apply(pdata, 1, getcol))
+      result[a] <- rgb(col)
+      return(result)
 }
