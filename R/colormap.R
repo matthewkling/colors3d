@@ -137,3 +137,19 @@ colorwheel2d <- function(data, colors=c("black", "yellow", "green", "cyan", "blu
       result[a] <- rgb(col)
       return(result)
 }
+
+
+#' Palettes of dissimilar colors in RGB space.
+#'
+#' Many standard palette generators use only a slice of color space, which can
+#' cause a lack of differentiability in palettes used to visualize categorical
+#' factors with many levels. This function attempts to overcome this by
+#' generating colors using clustering in 3D RGB space.
+#'
+#' @param n Number of colors (integer).
+#' @return Vector of color values.
+distant_colors <- function(n){
+      d <- expand.grid(r=0:100, g=0:100, b=0:100)
+      km <- kmeans(d, n)
+      rgb(km$centers/100)
+}
