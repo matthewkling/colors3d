@@ -4,7 +4,8 @@
 \alias{colors2d}
 \title{Map values to a 2D legend interpolated from 4 corner colors.}
 \usage{
-colors2d(data, colors = c("yellow", "green", "blue", "magenta"))
+colors2d(data, colors = c("yellow", "green", "blue", "magenta"),
+  xtrans = c("none", "log", "rank"), ytrans = c("none", "log", "rank"))
 }
 \arguments{
 \item{data}{Matrix or data frame with 2 numeric columns; they will map to x
