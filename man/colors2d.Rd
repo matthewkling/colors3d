@@ -21,4 +21,3 @@ Vector of color values.
 This function returns a color value for each row of the 2-column dataset
 supplied, based on a 2D color palette interpolated from 4 corner colors.
 }
-

@@ -4,10 +4,14 @@
 \alias{distant_colors}
 \title{Palettes of dissimilar colors in RGB space.}
 \usage{
-distant_colors(n)
+distant_colors(n, res = 20, reps = 100)
 }
 \arguments{
 \item{n}{Number of colors (integer).}
+
+\item{res}{Number of distinct values in each RGB dimension (integer).}
+
+\item{reps}{Number of optimization iterations (integer).}
 }
 \value{
 Vector of color values.
@@ -16,6 +20,6 @@ Vector of color values.
 Many standard palette generators use only a slice of color space, which can
 cause a lack of differentiability in palettes used to visualize categorical
 factors with many levels. This function attempts to overcome this by
-generating colors using clustering in 3D RGB space.
+generating colors using nearest-neighbor distance maximization in 3D RGB
+space.
 }
-

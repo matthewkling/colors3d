@@ -19,4 +19,3 @@ polarize(data, xyratio, xorigin = 0, yorigin = 0)
 \description{
 Internal function converting x-y do distance-angle.
 }
-

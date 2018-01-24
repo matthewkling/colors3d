@@ -33,4 +33,3 @@ This function returns a color value for each row of the 2-column dataset
 supplied, based on a 2D color palette defined by a center color and a series
 of peripheral colors.
 }
-

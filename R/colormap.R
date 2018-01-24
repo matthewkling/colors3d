@@ -152,12 +152,55 @@ colorwheel2d <- function(data, colors=c("black", "yellow", "green", "cyan", "blu
 #' Many standard palette generators use only a slice of color space, which can
 #' cause a lack of differentiability in palettes used to visualize categorical
 #' factors with many levels. This function attempts to overcome this by
-#' generating colors using clustering in 3D RGB space.
+#' generating colors using nearest-neighbor distance maximization in 3D RGB
+#' space.
 #'
 #' @param n Number of colors (integer).
+#' @param res Number of distinct values in each RGB dimension (integer).
+#' @param reps Number of optimization iterations (integer).
 #' @return Vector of color values.
-distant_colors <- function(n){
-      d <- expand.grid(r=0:100, g=0:100, b=0:100)
-      km <- kmeans(d, n)
-      rgb(km$centers/100)
+distant_colors <- function(n, res=20, reps=100){
+
+      require(dplyr)
+      require(FNN)
+
+      f <- expand.grid(r=1:res,
+                       g=1:res,
+                       b=1:res)
+
+      si <- sample_n(f, n, replace=F)
+
+      for(i in 1:reps){
+
+            si0 <- si
+
+            for(j in 1:n){
+
+                  # active location
+                  sij<- si[j,]
+
+                  # potential moves
+                  hood <- filter(f,
+                                 between(r, sij$r-1, sij$r+1),
+                                 between(g, sij$g-1, sij$g+1),
+                                 between(b, sij$b-1, sij$b+1))
+
+                  # reference locations
+                  sin <- si[-j,]
+
+                  # find the move with max dist to nearest active location
+                  dst <- get.knnx(sin, hood, k=1)$nn.dist
+                  move <- hood[which.max(dst)[1],]
+
+                  # execute optimal move
+                  si[j,] <- move
+            }
+
+            if(all.equal(as.matrix(si0), as.matrix(si)) == T) {
+                  message("converged!")
+                  break
+            }
+      }
+
+      rgb(si, maxColorValue=res)
 }

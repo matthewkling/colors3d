@@ -26,4 +26,3 @@ Vector of color values.
 This function returns a color value for each row of the 3-column dataset
 supplied, by transforming the input data and using it as RGB values.
 }
-
