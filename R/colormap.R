@@ -157,12 +157,13 @@ colorwheel2d <- function(data, colors=c("black", "yellow", "green", "cyan", "blu
 #'
 #' @param n Number of colors (integer).
 #' @param res Number of distinct values in each RGB dimension (integer).
-#' @param reps Number of optimization iterations (integer).
-#' @return Vector of color values.
-distant_colors <- function(n, res=20, reps=100){
+#' @param maxreps Max number of optimization iterations (integer).
+#' @param radius Neighborhood size for potential moves, analagous to heating
+#'   (integer).
+distant_colors <- function(n, res=20, maxreps=100, radius=1){
 
-      require(dplyr)
-      require(FNN)
+      require(dplyr, quietly=T)
+      require(FNN, quietly=T)
 
       f <- expand.grid(r=1:res,
                        g=1:res,
@@ -170,7 +171,7 @@ distant_colors <- function(n, res=20, reps=100){
 
       si <- sample_n(f, n, replace=F)
 
-      for(i in 1:reps){
+      for(i in 1:maxreps){
 
             si0 <- si
 
@@ -181,9 +182,9 @@ distant_colors <- function(n, res=20, reps=100){
 
                   # potential moves
                   hood <- filter(f,
-                                 between(r, sij$r-1, sij$r+1),
-                                 between(g, sij$g-1, sij$g+1),
-                                 between(b, sij$b-1, sij$b+1))
+                                 between(r, sij$r-radius, sij$r+radius),
+                                 between(g, sij$g-radius, sij$g+radius),
+                                 between(b, sij$b-radius, sij$b+radius))
 
                   # reference locations
                   sin <- si[-j,]
@@ -196,11 +197,11 @@ distant_colors <- function(n, res=20, reps=100){
                   si[j,] <- move
             }
 
-            if(all.equal(as.matrix(si0), as.matrix(si)) == T) {
-                  message("converged!")
-                  break
-            }
+            # check for convergence
+            if(all.equal(as.matrix(si0), as.matrix(si)) == T) break
       }
+
+      if(i == maxreps) warning("Algorithm failed to converge, consider increasing maxreps parameter.")
 
       rgb(si, maxColorValue=res)
 }

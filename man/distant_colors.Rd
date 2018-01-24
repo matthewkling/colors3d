@@ -4,17 +4,17 @@
 \alias{distant_colors}
 \title{Palettes of dissimilar colors in RGB space.}
 \usage{
-distant_colors(n, res = 20, reps = 100)
+distant_colors(n, res = 20, maxreps = 100, radius = 1)
 }
 \arguments{
 \item{n}{Number of colors (integer).}
 
 \item{res}{Number of distinct values in each RGB dimension (integer).}
 
-\item{reps}{Number of optimization iterations (integer).}
-}
-\value{
-Vector of color values.
+\item{maxreps}{Max number of optimization iterations (integer).}
+
+\item{radius}{Neighborhood size for potential moves, analagous to heating
+(integer).}
 }
 \description{
 Many standard palette generators use only a slice of color space, which can
