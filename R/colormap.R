@@ -158,12 +158,14 @@ colorwheel2d <- function(data, colors=c("black", "yellow", "green", "cyan", "blu
 #' @param n Number of colors (integer).
 #' @param res Number of distinct values in each RGB dimension (integer).
 #' @param maxreps Max number of optimization iterations (integer).
-#' @param radius Neighborhood size for potential moves, analagous to heating
-#'   (integer).
-distant_colors <- function(n, res=20, maxreps=100, radius=1){
+#' @param radius Neighborhood size for potential moves, analagous to heating.
+#' @param avoid_white Logical, default is TRUE.
+distant_colors <- function(n, res=20, maxreps=100, radius=1, avoid_white=T){
 
       require(dplyr, quietly=T)
       require(FNN, quietly=T)
+
+      if(avoid_white) n <- n + 1
 
       f <- expand.grid(r=1:res,
                        g=1:res,
@@ -202,6 +204,8 @@ distant_colors <- function(n, res=20, maxreps=100, radius=1){
       }
 
       if(i == maxreps) warning("Algorithm failed to converge, consider increasing maxreps parameter.")
+
+      if(avoid_white) si <- si[setdiff(1:nrow(si), which.max(si$r + si$g + si$b)),]
 
       rgb(si, maxColorValue=res)
 }

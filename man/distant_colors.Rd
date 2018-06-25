@@ -4,7 +4,7 @@
 \alias{distant_colors}
 \title{Palettes of dissimilar colors in RGB space.}
 \usage{
-distant_colors(n, res = 20, maxreps = 100, radius = 1)
+distant_colors(n, res = 20, maxreps = 100, radius = 1, avoid_white = T)
 }
 \arguments{
 \item{n}{Number of colors (integer).}
@@ -13,8 +13,9 @@ distant_colors(n, res = 20, maxreps = 100, radius = 1)
 
 \item{maxreps}{Max number of optimization iterations (integer).}
 
-\item{radius}{Neighborhood size for potential moves, analagous to heating
-(integer).}
+\item{radius}{Neighborhood size for potential moves, analagous to heating.}
+
+\item{avoid_white}{Logical, default is TRUE.}
 }
 \description{
 Many standard palette generators use only a slice of color space, which can
