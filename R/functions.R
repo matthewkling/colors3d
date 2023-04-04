@@ -1,6 +1,4 @@
 
-
-
 #' Map values to a 3D legend in RGB colorspace.
 #'
 #' This function returns a color value for each row of the 3-column dataset
@@ -13,9 +11,9 @@
 #'   variables-to-color band mapping.
 #' @param inversion Integer from 1 to 8, each denoting a unique combination of
 #'   variables to invert.
-#'   @param opacity Not currently used.
+#' @param opacity Not currently used.
 #' @return Vector of color values.
-
+#' @export
 colors3d <- function(data, trans="fit", order=1, inversion=1, opacity=NULL){
       require(scales)
       require(combinat)
@@ -40,23 +38,31 @@ colors3d <- function(data, trans="fit", order=1, inversion=1, opacity=NULL){
 #'   and y.
 #' @param colors Vector of 4 corner colors to interpolate, clockwise from upper
 #'   right.
+#' @param xtrans,ytrans Transformation to apply to x and y variables before
+#'   applying a linear color mapping: either "none" (default), "log", or "rank".
 #' @return Vector of color values.
-
-colors2d <- function(data, colors=c("yellow", "green", "blue", "magenta"),
-                     xtrans=c("none", "log", "rank"), ytrans=c("none", "log", "rank")){
+#' @export
+colors2d <- function(data, 
+                     colors = c("yellow", "green", "blue", "magenta"),
+                     xtrans = c("none", "log", "rank"), 
+                     ytrans = c("none", "log", "rank")){
+      
+      xtrans <- match.arg(xtrans, c("none", "log", "rank"))
+      ytrans <- match.arg(ytrans, c("none", "log", "rank"))
+      
       colors <- col2rgb(colors)/255
 
-      if(xtrans=="rank") data[,1] <- ecdf(data[,1])(data[,1])
-      if(ytrans=="rank") data[,2] <- ecdf(data[,2])(data[,2])
-      if(xtrans=="log") data[,1] <- log(data[,1])
-      if(ytrans=="log") data[,2] <- log(data[,2])
+      if(xtrans == "rank") data[, 1] <- rank(data[, 1]) / nrow(data)
+      if(ytrans == "rank") data[, 2] <- rank(data[, 2]) / nrow(data)
+      if(xtrans == "log") data[, 1] <- log(data[, 1])
+      if(ytrans == "log") data[, 2] <- log(data[, 2])
 
       data <- apply(data, 2, scales::rescale)
       interpolate <- function(i){
             x <- i[1]
             y <- i[2]
-            x1 <- colors[,2] * x + colors[,3] * (1-x)
-            x2 <- colors[,1] * x + colors[,4] * (1-x)
+            x1 <- colors[, 2] * x + colors[, 3] * (1-x)
+            x2 <- colors[, 1] * x + colors[, 4] * (1-x)
             x2 * y + x1 * (1-y)
       }
       rgb(t(apply(data, 1, interpolate)))
@@ -72,7 +78,6 @@ colors2d <- function(data, colors=c("yellow", "green", "blue", "magenta"),
 #' @param xyratio Single number indicating unit ratio in x vs y direction.
 #' @param xorigin, yorigin Numbers indicating center of polarization.
 #' @return 2-column matrix of distances and angles.
-
 polarize <- function(data, xyratio, xorigin=0, yorigin=0){
       distance <- sqrt((data[,1]-xorigin)^2 + ((data[,2]-yorigin) * xyratio)^2)
       angle <- acos((data[,1]-xorigin) / distance) * 180 / pi
@@ -91,7 +96,7 @@ polarize <- function(data, xyratio, xorigin=0, yorigin=0){
 #'   and y.
 #' @param colors Vector of colors to interpolate: center followed by periphery
 #'   counterclockwise from 3 o'clock.
-#' @param origin Coorindates of color wheel center.
+#' @param origin Coordindates of color wheel center.
 #' @param xyratio Scalar representing how to map the elliptical color wheel in
 #'   the data space (the default 1 a circular mapping that weights the two
 #'   dimensions equally).
@@ -100,9 +105,10 @@ polarize <- function(data, xyratio, xorigin=0, yorigin=0){
 #'   kernel); this function should take a vector of distances to the center as
 #'   its sole input and return a positive number.
 #' @return Vector of color values.
-
-colorwheel2d <- function(data, colors=c("black", "yellow", "green", "cyan", "blue", "magenta", "red"),
-                         origin=NULL, xyratio=NULL, kernel=NULL){
+#' @export
+colorwheel2d <- function(data, 
+                         colors = c("black", "yellow", "green", "cyan", "blue", "magenta", "red"),
+                         origin = NULL, xyratio = NULL, kernel = NULL){
       result <- rep(NA, nrow(data))
       a <- which(!is.na(apply(data, 1, sum)))
       data <- na.omit(data)
@@ -118,6 +124,7 @@ colorwheel2d <- function(data, colors=c("black", "yellow", "green", "cyan", "blu
 
       pdata <- as.data.frame(polarize(data, xyratio=xyratio,
                                       xorigin=origin[1], yorigin=origin[2]))
+      names(pdata) <- c("distance", "angle")
 
       if(!is.null(kernel)) pdata$distance <- kernel(pdata$distance)
       pdata$angle <- pdata$angle / 360
@@ -160,6 +167,7 @@ colorwheel2d <- function(data, colors=c("black", "yellow", "green", "cyan", "blu
 #' @param maxreps Max number of optimization iterations (integer).
 #' @param radius Neighborhood size for potential moves, analagous to heating.
 #' @param avoid_white Logical, default is TRUE.
+#' @export
 distant_colors <- function(n, res=20, maxreps=100, radius=1, avoid_white=T){
 
       require(dplyr, quietly=T)

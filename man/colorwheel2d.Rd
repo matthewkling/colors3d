@@ -19,7 +19,7 @@ and y.}
 \item{colors}{Vector of colors to interpolate: center followed by periphery
 counterclockwise from 3 o'clock.}
 
-\item{origin}{Coorindates of color wheel center.}
+\item{origin}{Coordindates of color wheel center.}
 
 \item{xyratio}{Scalar representing how to map the elliptical color wheel in
 the data space (the default 1 a circular mapping that weights the two

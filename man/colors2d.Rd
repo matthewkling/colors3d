@@ -17,6 +17,9 @@ and y.}
 
 \item{colors}{Vector of 4 corner colors to interpolate, clockwise from upper
 right.}
+
+\item{xtrans, ytrans}{Transformation to apply to x and y variables before
+applying a linear color mapping: either "none" (default), "log", or "rank".}
 }
 \value{
 Vector of color values.

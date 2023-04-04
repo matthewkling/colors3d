@@ -16,8 +16,9 @@ colors3d(data, trans = "fit", order = 1, inversion = 1, opacity = NULL)
 variables-to-color band mapping.}
 
 \item{inversion}{Integer from 1 to 8, each denoting a unique combination of
-variables to invert.
-@param opacity Not currently used.}
+variables to invert.}
+
+\item{opacity}{Not currently used.}
 }
 \value{
 Vector of color values.
