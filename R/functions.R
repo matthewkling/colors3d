@@ -5,23 +5,29 @@
 #' supplied, by transforming the input data and using it as RGB values.
 #'
 #' @param data Matrix or data frame with 3 numeric columns.
-#' @param trans Either "fit" (defaut, histogram is rescaled) or "ecdf"
+#' @param trans Either "none" (defaut, histogram is rescaled) or "rank"
 #'   (histogram is flattened).
 #' @param order Integer from 1 to 6, each denoting a unique permutation of
-#'   variables-to-color band mapping.
+#'   variables-to-color band mapping. Under the default value of 1, the 
+#'   three variables in `data` are respectively mapped onto the R, G, and B 
+#'   bands of colorspace.
 #' @param inversion Integer from 1 to 8, each denoting a unique combination of
-#'   variables to invert.
+#'   variables to reverse before mapping. Under the default value of 1, all 
+#'   three variables are mapped with positive values at the high end of the
+#'   color band. Together with the `order` parameter, this allows all possible
+#'   48 unique mappings of a given set of variables onto 3D colorspace.
 #' @param opacity Not currently used.
 #' @return Vector of color values.
 #' @export
-colors3d <- function(data, trans="fit", order=1, inversion=1, opacity=NULL){
+colors3d <- function(data, trans = "none", order = 1, inversion = 1, opacity = NULL){
       require(scales)
       require(combinat)
+      trans <- match.arg(xtrans, c("none", "rank"))
       data <- apply(data, 2, rescale)
-      if(trans=="ecdf") data <- apply(data, 2, function(x)ecdf(x)(x))
+      if(trans == "rank") data <- apply(data, 2, function(x) rank(x) / length(x))
       data <- data[,permn(1:3)[[order]]]
-      invert <- (1:3)[as.logical(expand.grid(c(F,T), c(F,T), c(F,T))[inversion,])]
-      data[,invert] <- 1- data[,invert]
+      invert <- (1:3)[as.logical(expand.grid(c(F, T), c(F, T), c(F, T))[inversion, ])]
+      data[, invert] <- 1 - data[, invert]
       cols <- rep(NA, nrow(data))
       cols[which(is.finite(rowMeans(data)))] <- rgb(na.omit(data))
       cols
@@ -65,10 +71,11 @@ colors2d <- function(data,
             x2 <- colors[, 1] * x + colors[, 4] * (1-x)
             x2 * y + x1 * (1-y)
       }
-      rgb(t(apply(data, 1, interpolate)))
+      
+      cols <- rep(NA, nrow(data))
+      cols[which(is.finite(rowMeans(data)))] <- rgb(t(apply(na.omit(data), 1, interpolate)))
+      cols
 }
-
-
 
 
 
@@ -76,7 +83,7 @@ colors2d <- function(data,
 #'
 #' @param data Matrix or data frame with 2 numeric columns representing x and y.
 #' @param xyratio Single number indicating unit ratio in x vs y direction.
-#' @param xorigin, yorigin Numbers indicating center of polarization.
+#' @param xorigin,yorigin Numbers indicating center of polarization.
 #' @return 2-column matrix of distances and angles.
 polarize <- function(data, xyratio, xorigin=0, yorigin=0){
       distance <- sqrt((data[,1]-xorigin)^2 + ((data[,2]-yorigin) * xyratio)^2)
