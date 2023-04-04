@@ -25,14 +25,14 @@ The three main functions, `colors3d`, `colors2d`, and `colorwheel2d` generate a 
 
 ## Installation
 
-You can install color3d from [GitHub](https://github.com/) with `devtools::install_github("matthewkling/color3d")`
+You can install colors3d from [GitHub](https://github.com/) with `devtools::install_github("matthewkling/colors3d")`
 
 ## Examples
 
 Here's a simple application of the three color mapping functions. I'm a tidyverse type so I use that here, but this would all work in base R as well:
 
 ```{r example}
-library(color3d)
+library(colors3d)
 library(tidyverse)
 
 # simualte a 3D data set

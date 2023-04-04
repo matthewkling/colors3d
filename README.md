@@ -15,8 +15,8 @@ columns. These can then be used for plotting in various ways.
 
 ## Installation
 
-You can install color3d from [GitHub](https://github.com/) with
-`devtools::install_github("matthewkling/color3d")`
+You can install colors3d from [GitHub](https://github.com/) with
+`devtools::install_github("matthewkling/colors3d")`
 
 ## Examples
 
@@ -25,7 +25,7 @@ tidyverse type so I use that here, but this would all work in base R as
 well:
 
 ``` r
-library(color3d)
+library(colors3d)
 library(tidyverse)
 #> ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
 #> ✔ ggplot2 3.3.6     ✔ purrr   1.0.1
