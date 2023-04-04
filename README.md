@@ -1,4 +1,3 @@
-# colormap
-###An R package for 2d and 3d color mappings
+# color3d
 
-This is an early stage development vesion of an R library with functions to help generate two-dimensional and three-dimensional color gradient legends.
+This R package provides functions to help generate two-dimensional and three-dimensional color gradient legends.

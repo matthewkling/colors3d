@@ -1,5 +1,5 @@
-Package: colormap
-Title: What the Package Does (one line, title case)
+Package: color3d
+Title: 3D and 2D color mappings
 Version: 0.0.0.9000
 Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
 Description: What the package does (one paragraph).
@@ -7,4 +7,4 @@ Depends:
     R (>= 3.2.2)
 License: What license is it under?
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 7.2.1
