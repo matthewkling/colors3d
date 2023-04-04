@@ -11,7 +11,7 @@ polarize(data, xyratio, xorigin = 0, yorigin = 0)
 
 \item{xyratio}{Single number indicating unit ratio in x vs y direction.}
 
-\item{xorigin, }{yorigin Numbers indicating center of polarization.}
+\item{xorigin, yorigin}{Numbers indicating center of polarization.}
 }
 \value{
 2-column matrix of distances and angles.

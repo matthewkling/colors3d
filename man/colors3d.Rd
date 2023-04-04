@@ -4,19 +4,24 @@
 \alias{colors3d}
 \title{Map values to a 3D legend in RGB colorspace.}
 \usage{
-colors3d(data, trans = "fit", order = 1, inversion = 1, opacity = NULL)
+colors3d(data, trans = "none", order = 1, inversion = 1, opacity = NULL)
 }
 \arguments{
 \item{data}{Matrix or data frame with 3 numeric columns.}
 
-\item{trans}{Either "fit" (defaut, histogram is rescaled) or "ecdf"
+\item{trans}{Either "none" (defaut, histogram is rescaled) or "rank"
 (histogram is flattened).}
 
 \item{order}{Integer from 1 to 6, each denoting a unique permutation of
-variables-to-color band mapping.}
+variables-to-color band mapping. Under the default value of 1, the 
+three variables in `data` are respectively mapped onto the R, G, and B 
+bands of colorspace.}
 
 \item{inversion}{Integer from 1 to 8, each denoting a unique combination of
-variables to invert.}
+variables to reverse before mapping. Under the default value of 1, all 
+three variables are mapped with positive values at the high end of the
+color band. Together with the `order` parameter, this allows all possible
+48 unique mappings of a given set of variables onto 3D colorspace.}
 
 \item{opacity}{Not currently used.}
 }

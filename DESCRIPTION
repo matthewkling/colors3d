@@ -9,3 +9,6 @@ License: MIT + file LICENSE
 LazyData: true
 RoxygenNote: 7.2.1
 Encoding: UTF-8
+Imports: 
+    plyr,
+    scales
