@@ -31,7 +31,7 @@ You can install colors3d from [GitHub](https://github.com/) with `devtools::inst
 
 Here's a simple application of the three color mapping functions. I'm a tidyverse type so I use that here, but this would all work in base R as well:
 
-```{r example}
+```{r example, warning=FALSE, message=FALSE}
 library(colors3d)
 library(tidyverse)
 
@@ -58,7 +58,7 @@ d %>%
 ```
 In a more realistic application, we often want to create a pair of plots for a given visualization: a "legend" in which the x and y dimensions match those used to create the color mapping, and a second plot in which the colors are then displayed in a different data space. This allows users to understand relationships among four dimensions of the data (or 5, if a 3D color mapping is used). Let's use the `storms` dataset (from dplyr) as an example, with hurricane windspeed, size, longitude, and latitude as our variables of interest:
 
-```{r example2}
+```{r example2, warning=FALSE, message=FALSE}
 d <- na.omit(storms)
 d$color <- colors2d(select(d, wind, hurricane_force_diameter),
                     xtrans = "rank", ytrans = "rank")

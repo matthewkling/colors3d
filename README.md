@@ -27,14 +27,6 @@ well:
 ``` r
 library(colors3d)
 library(tidyverse)
-#> ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
-#> ✔ ggplot2 3.3.6     ✔ purrr   1.0.1
-#> ✔ tibble  3.1.8     ✔ dplyr   1.1.0
-#> ✔ tidyr   1.3.0     ✔ stringr 1.5.0
-#> ✔ readr   2.1.2     ✔ forcats 0.5.2
-#> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-#> ✖ dplyr::filter() masks stats::filter()
-#> ✖ dplyr::lag()    masks stats::lag()
 
 # simualte a 3D data set
 d <- expand_grid(x = 1:20, y = 1:20, z = 1:4)
@@ -56,25 +48,6 @@ d %>%
 
 # define and plot a 3D color mapping
 d$color3d <- colors3d(d[, 1:3])
-#> Loading required package: scales
-#> 
-#> Attaching package: 'scales'
-#> 
-#> The following object is masked from 'package:purrr':
-#> 
-#>     discard
-#> 
-#> The following object is masked from 'package:readr':
-#> 
-#>     col_factor
-#> 
-#> Loading required package: combinat
-#> 
-#> Attaching package: 'combinat'
-#> 
-#> The following object is masked from 'package:utils':
-#> 
-#>     combn
 d %>%
       ggplot(aes(x, y, fill = color3d)) +
       facet_wrap(~z, nrow = 1, labeller = label_both) +
