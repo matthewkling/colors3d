@@ -22,7 +22,7 @@
 colors3d <- function(data, trans = "none", order = 1, inversion = 1, opacity = NULL){
       require(scales)
       require(combinat)
-      trans <- match.arg(xtrans, c("none", "rank"))
+      trans <- match.arg(trans, c("none", "rank"))
       data <- apply(data, 2, rescale)
       if(trans == "rank") data <- apply(data, 2, function(x) rank(x) / length(x))
       data <- data[,permn(1:3)[[order]]]
