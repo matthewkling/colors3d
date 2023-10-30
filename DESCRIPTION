@@ -1,14 +1,20 @@
 Package: colors3d
-Title: 3D and 2D color mappings
+Title: Generate 2D and 3D Color Palettes
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Authors@R: person("Matthew", "Kling", email = "mattkling@berkeley.edu", role = c("aut", "cre", "cph"))
+Description: Generate multivariate color palettes to represent two-dimensional or three-dimensional data in graphics. You tell 'colors3d' how to map color space onto your data, and it gives you a color for each data point. You can then use these colors to make plots in base 'R', 'ggplot2', or other graphics frameworks.
 Depends:
     R (>= 3.2.2)
 License: MIT + file LICENSE
 LazyData: true
-RoxygenNote: 7.2.1
+URL: https://github.com/matthewkling/colors3d
+BugReports: https://github.com/matthewkling/colors3d/issues
+RoxygenNote: 7.2.3
 Encoding: UTF-8
 Imports: 
+    combinat,
+    FNN,
+    grDevices,
     plyr,
-    scales
+    scales,
+    stats

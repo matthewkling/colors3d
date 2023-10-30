@@ -15,20 +15,20 @@ columns. These can then be used for plotting in various ways.
 
 ## Installation
 
-You can install colors3d from [GitHub](https://github.com/) with
-`devtools::install_github("matthewkling/colors3d")`
+You can install colors3d from GitHub with
+`devtools::install_github("matthewkling/colors3d")` or from CRAN with
+`install.packages("colors3d")`.
 
 ## Examples
 
-Here’s a simple application of the three color mapping functions. I’m a
-tidyverse type so I use that here, but this would all work in base R as
-well:
+Here’s a simple application of the three color mapping functions. This
+example uses tidyverse, but this would all work in base R as well:
 
 ``` r
 library(colors3d)
 library(tidyverse)
 
-# simualte a 3D data set
+# simulate a 3D data set
 d <- expand_grid(x = 1:20, y = 1:20, z = 1:4)
 
 # define and plot some 2D color mappings

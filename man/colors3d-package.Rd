@@ -6,7 +6,7 @@
 \alias{_PACKAGE}
 \title{colors3d: Generate 2D and 3D Color Palettes}
 \description{
-Generate multivariate color palettes to represent two-dimensional or three-dimensional data in graphics. You tell 'colors3d' how to map colorspace onto your data, and it gives you a color for each data point. You can then use these colors to make plots in base 'R', 'ggplot2', or other graphics frameworks.
+Generate multivariate color palettes to represent two-dimensional or three-dimensional data in graphics. You tell 'colors3d' how to map color space onto your data, and it gives you a color for each data point. You can then use these colors to make plots in base 'R', 'ggplot2', or other graphics frameworks.
 }
 \seealso{
 Useful links:
