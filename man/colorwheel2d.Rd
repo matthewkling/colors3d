@@ -31,10 +31,22 @@ kernel); this function should take a vector of distances to the center as
 its sole input and return a positive number.}
 }
 \value{
-Vector of color values.
+Character vector of colors.
 }
 \description{
 This function returns a color value for each row of the 2-column dataset
 supplied, based on a 2D color palette defined by a center color and a series
 of peripheral colors.
+}
+\examples{
+plot(iris, 
+      col = colorwheel2d(iris[, c("Sepal.Length", "Sepal.Width")]), 
+      pch = 19, cex = 2)
+      
+plot(iris, 
+      col = colorwheel2d(
+                  iris[, c("Sepal.Length", "Sepal.Width")],
+                  origin = c(5.5, 2.5),
+                  kernel = function(x) x ^ .5), 
+      pch = 19, cex = 2)
 }

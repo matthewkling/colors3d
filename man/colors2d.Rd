@@ -22,9 +22,20 @@ right.}
 applying a linear color mapping: either "none" (default), "log", or "rank".}
 }
 \value{
-Vector of color values.
+Character vector of colors.
 }
 \description{
 This function returns a color value for each row of the 2-column dataset
 supplied, based on a 2D color palette interpolated from 4 corner colors.
+}
+\examples{
+plot(iris, 
+     col = colors2d(iris[, c("Sepal.Length", "Sepal.Width")]), 
+     pch = 19, cex = 2)
+     
+plot(iris, 
+     col = colors2d(iris[, c("Sepal.Length", "Sepal.Width")],
+                    colors = c("limegreen", "gold", "black", "dodgerblue"),
+                    xtrans = "rank", ytrans = "rank"), 
+     pch = 19, cex = 2)
 }

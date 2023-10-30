@@ -4,7 +4,14 @@
 \alias{distant_colors}
 \title{Palettes of dissimilar colors in RGB space.}
 \usage{
-distant_colors(n, res = 20, maxreps = 100, radius = 1, avoid_white = T)
+distant_colors(
+  n,
+  res = 20,
+  maxreps = 1000,
+  radius = 10,
+  avoid_white = T,
+  seed = NULL
+)
 }
 \arguments{
 \item{n}{Number of colors (integer).}
@@ -16,6 +23,11 @@ distant_colors(n, res = 20, maxreps = 100, radius = 1, avoid_white = T)
 \item{radius}{Neighborhood size for potential moves, analagous to heating.}
 
 \item{avoid_white}{Logical, default is TRUE.}
+
+\item{seed}{Integer used to seed randomization during search; leave as NULL to generate different results each time, or set a value to generate reproducible results.}
+}
+\value{
+Character vector of colors.
 }
 \description{
 Many standard palette generators use only a slice of color space, which can
@@ -23,4 +35,9 @@ cause a lack of differentiability in palettes used to visualize categorical
 factors with many levels. This function attempts to overcome this by
 generating colors using nearest-neighbor distance maximization in 3D RGB
 space.
+}
+\examples{
+plot(runif(20), runif(20), 
+     col = distant_colors(20), 
+     pch = 16, cex = 3)
 }

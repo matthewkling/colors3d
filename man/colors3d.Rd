@@ -26,9 +26,16 @@ color band. Together with the `order` parameter, this allows all possible
 \item{opacity}{Not currently used.}
 }
 \value{
-Vector of color values.
+Character vector of colors.
 }
 \description{
 This function returns a color value for each row of the 3-column dataset
 supplied, by transforming the input data and using it as RGB values.
+}
+\examples{
+d <- expand.grid(x = 1:49, y = 1:49)
+d$z <- cos(sqrt((d$x-25)^2 + (d$y-25)^2))
+plot(d[, 1:2], col = colors3d(d), pch = 15, cex = 2)
+
+plot(d[, 1:2], col = colors3d(d, order = 2, inversion = 2), pch = 15, cex = 2)
 }

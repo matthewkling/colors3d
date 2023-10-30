@@ -17,15 +17,20 @@
 #'   color band. Together with the `order` parameter, this allows all possible
 #'   48 unique mappings of a given set of variables onto 3D colorspace.
 #' @param opacity Not currently used.
-#' @return Vector of color values.
+#' @returns Character vector of colors.
+#' @examples 
+#' d <- expand.grid(x = 1:49, y = 1:49)
+#' d$z <- cos(sqrt((d$x-25)^2 + (d$y-25)^2))
+#' plot(d[, 1:2], col = colors3d(d), pch = 15, cex = 2)
+#' 
+#' plot(d[, 1:2], col = colors3d(d, order = 2, inversion = 2), pch = 15, cex = 2)
 #' @export
 colors3d <- function(data, trans = "none", order = 1, inversion = 1, opacity = NULL){
-      require(scales)
-      require(combinat)
+      rescale <- function(x) (x - min(x)) / (max(x) - min(x))
       trans <- match.arg(trans, c("none", "rank"))
       data <- apply(data, 2, rescale)
       if(trans == "rank") data <- apply(data, 2, function(x) rank(x) / length(x))
-      data <- data[,permn(1:3)[[order]]]
+      data <- data[, combinat::permn(1:3)[[order]]]
       invert <- (1:3)[as.logical(expand.grid(c(F, T), c(F, T), c(F, T))[inversion, ])]
       data[, invert] <- 1 - data[, invert]
       cols <- rep(NA, nrow(data))
@@ -46,7 +51,17 @@ colors3d <- function(data, trans = "none", order = 1, inversion = 1, opacity = N
 #'   right.
 #' @param xtrans,ytrans Transformation to apply to x and y variables before
 #'   applying a linear color mapping: either "none" (default), "log", or "rank".
-#' @return Vector of color values.
+#' @returns Character vector of colors.
+#' @examples 
+#' plot(iris, 
+#'      col = colors2d(iris[, c("Sepal.Length", "Sepal.Width")]), 
+#'      pch = 19, cex = 2)
+#'      
+#' plot(iris, 
+#'      col = colors2d(iris[, c("Sepal.Length", "Sepal.Width")],
+#'                     colors = c("limegreen", "gold", "black", "dodgerblue"),
+#'                     xtrans = "rank", ytrans = "rank"), 
+#'      pch = 19, cex = 2)
 #' @export
 colors2d <- function(data, 
                      colors = c("yellow", "green", "blue", "magenta"),
@@ -84,7 +99,7 @@ colors2d <- function(data,
 #' @param data Matrix or data frame with 2 numeric columns representing x and y.
 #' @param xyratio Single number indicating unit ratio in x vs y direction.
 #' @param xorigin,yorigin Numbers indicating center of polarization.
-#' @return 2-column matrix of distances and angles.
+#' @returns 2-column matrix of distances and angles.
 polarize <- function(data, xyratio, xorigin=0, yorigin=0){
       distance <- sqrt((data[,1]-xorigin)^2 + ((data[,2]-yorigin) * xyratio)^2)
       angle <- acos((data[,1]-xorigin) / distance) * 180 / pi
@@ -111,7 +126,18 @@ polarize <- function(data, xyratio, xorigin=0, yorigin=0){
 #'   gradients (default is a linear mapping corresponding to a triangular
 #'   kernel); this function should take a vector of distances to the center as
 #'   its sole input and return a positive number.
-#' @return Vector of color values.
+#' @returns Character vector of colors.
+#' @examples
+#' plot(iris, 
+#'       col = colorwheel2d(iris[, c("Sepal.Length", "Sepal.Width")]), 
+#'       pch = 19, cex = 2)
+#'       
+#' plot(iris, 
+#'       col = colorwheel2d(
+#'                   iris[, c("Sepal.Length", "Sepal.Width")],
+#'                   origin = c(5.5, 2.5),
+#'                   kernel = function(x) x ^ .5), 
+#'       pch = 19, cex = 2)
 #' @export
 colorwheel2d <- function(data, 
                          colors = c("black", "yellow", "green", "cyan", "blue", "magenta", "red"),
@@ -174,19 +200,24 @@ colorwheel2d <- function(data,
 #' @param maxreps Max number of optimization iterations (integer).
 #' @param radius Neighborhood size for potential moves, analagous to heating.
 #' @param avoid_white Logical, default is TRUE.
+#' @param seed Integer used to seed randomization during search; leave as NULL to generate different results each time, or set a value to generate reproducible results.
+#' @returns Character vector of colors.
+#' @examples
+#' plot(runif(20), runif(20), 
+#'      col = distant_colors(20), 
+#'      pch = 16, cex = 3)
 #' @export
-distant_colors <- function(n, res=20, maxreps=100, radius=1, avoid_white=T){
+distant_colors <- function(n, res=20, maxreps=1000, radius=10, avoid_white=T, seed=NULL){
 
-      require(dplyr, quietly=T)
-      require(FNN, quietly=T)
-
+      if(!is.null(seed)) set.seed(seed)
+      
       if(avoid_white) n <- n + 1
 
       f <- expand.grid(r=1:res,
                        g=1:res,
                        b=1:res)
 
-      si <- sample_n(f, n, replace=F)
+      si <- f[sample(nrow(f), n),]
 
       for(i in 1:maxreps){
 
@@ -198,17 +229,16 @@ distant_colors <- function(n, res=20, maxreps=100, radius=1, avoid_white=T){
                   sij<- si[j,]
 
                   # potential moves
-                  hood <- filter(f,
-                                 between(r, sij$r-radius, sij$r+radius),
-                                 between(g, sij$g-radius, sij$g+radius),
-                                 between(b, sij$b-radius, sij$b+radius))
+                  h <- f[f$r > sij$r-radius & f$r < sij$r+radius &
+                                  f$g > sij$g-radius & f$g < sij$g+radius &
+                                  f$b > sij$b-radius & f$b < sij$b+radius,]
 
                   # reference locations
                   sin <- si[-j,]
 
                   # find the move with max dist to nearest active location
-                  dst <- get.knnx(sin, hood, k=1)$nn.dist
-                  move <- hood[which.max(dst)[1],]
+                  dst <- FNN::get.knnx(sin, h, k=1)$nn.dist
+                  move <- h[which.max(dst)[1],]
 
                   # execute optimal move
                   si[j,] <- move
