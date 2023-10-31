@@ -31,7 +31,7 @@ colors3d <- function(data, trans = "none", order = 1, inversion = 1, opacity = N
       data <- apply(data, 2, rescale)
       if(trans == "rank") data <- apply(data, 2, function(x) rank(x) / length(x))
       data <- data[, combinat::permn(1:3)[[order]]]
-      invert <- (1:3)[as.logical(expand.grid(c(F, T), c(F, T), c(F, T))[inversion, ])]
+      invert <- (1:3)[as.logical(expand.grid(c(FALSE, TRUE), c(FALSE, TRUE), c(FALSE, TRUE))[inversion, ])]
       data[, invert] <- 1 - data[, invert]
       cols <- rep(NA, nrow(data))
       cols[which(is.finite(rowMeans(data)))] <- rgb(na.omit(data))
@@ -207,7 +207,7 @@ colorwheel2d <- function(data,
 #'      col = distant_colors(20), 
 #'      pch = 16, cex = 3)
 #' @export
-distant_colors <- function(n, res=20, maxreps=1000, radius=10, avoid_white=T, seed=NULL){
+distant_colors <- function(n, res=20, maxreps=1000, radius=10, avoid_white=TRUE, seed=NULL){
 
       if(!is.null(seed)) set.seed(seed)
       
@@ -245,7 +245,7 @@ distant_colors <- function(n, res=20, maxreps=1000, radius=10, avoid_white=T, se
             }
 
             # check for convergence
-            if(all.equal(as.matrix(si0), as.matrix(si)) == T) break
+            if(all.equal(as.matrix(si0), as.matrix(si)) == TRUE) break
       }
 
       if(i == maxreps) warning("Algorithm failed to converge, consider increasing maxreps parameter.")

@@ -9,7 +9,7 @@ distant_colors(
   res = 20,
   maxreps = 1000,
   radius = 10,
-  avoid_white = T,
+  avoid_white = TRUE,
   seed = NULL
 )
 }
