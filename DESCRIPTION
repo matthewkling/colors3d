@@ -7,7 +7,8 @@ Depends:
     R (>= 3.2.2)
 License: MIT + file LICENSE
 LazyData: true
-URL: https://github.com/matthewkling/colors3d
+URL: https://github.com/matthewkling/colors3d,
+    http://matthewkling.github.io/colors3d/
 BugReports: https://github.com/matthewkling/colors3d/issues
 RoxygenNote: 7.2.3
 Encoding: UTF-8
